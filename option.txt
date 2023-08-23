@@ -1,0 +1,18 @@
+deltaTime 1e-1
+totalTime 1000000
+tol 1e-8
+stol 1e-8
+maxIter 100
+render 0
+saveData 1
+viscosity 0.0
+gVector 0.0 0.0 -10
+Poisson 0.5
+hangLength 5
+normKs 500
+kappaI 0
+kappaT 0.01
+dl_b 0.001
+xTop 3.31
+yTop 0
+zTop 1.68

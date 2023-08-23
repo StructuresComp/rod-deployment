@@ -1,0 +1,7 @@
+build/
+datafiles/
+numericSolver.py
+pattern.txt
+traj_Sim.txt
+Videos/
+simOpt

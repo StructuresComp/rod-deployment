@@ -1,0 +1,32 @@
+% clc; clear all; close all;
+
+data = importdata("datafiles/force_hangLength_0.01_scale_1_dl_0.001.txt");
+
+idx = and(abs(data(:,9)) > 0, data(:,12) > 0, data(:);
+% Fs = data(idx,7:9) + data(idx, 10:12);
+Fs = data(idx, 7:9) + data(idx, 10:12);
+Fm = data(idx, 10:
+xTop = data(idx, 1);
+zTop = data(idx, 3);
+Ft = abs(Fs(:,1));
+Fn = Fs(:,3);
+[val, ind] = min(Ft);
+sz = 25;
+
+scatter(xTop, zTop, sz, Fn, 'filled');
+hold on
+plot(xTop(ind), zTop(ind), 'ro');
+hold off
+colorbar
+box on
+xlabel('x');
+ylabel('z');
+axis equal;
+hold on;
+plot(data(:,1), data(:,3));
+
+fprintf("Cord. (%.4f, %.4f) with minimal horizontal force: %.9f", xTop(ind), ...
+    zTop(ind), Ft(ind));
+
+
+% set(gca, 'Yscale', 'log');
