@@ -4,6 +4,7 @@ import matplotlib.colors as colors
 from scipy.spatial.transform import Rotation as R
 import torch
 import copy
+from scipy import interpolate
 
 global ON_GPU
 if torch.cuda.is_available():
@@ -150,3 +151,32 @@ def visualizePatternAndTraj(pattern, Traj):
 
 
     plt.show()
+
+def preProcessPattern(pattern):
+    tangent = np.diff(pattern, axis = 0)
+    segL = np.sum(tangent**2, 1)**0.5
+    segL = np.cumsum(segL)
+    segL = np.insert(segL, 0, 0)
+    factor0 = segL[-1]
+    segL /= factor0
+    pattern /= factor0
+    x = pattern[:, 0]
+    y = pattern[:, 1]
+    tcx = interpolate.splrep(segL, x, s = 0.001)
+    tcy = interpolate.splrep(segL, y, s = 0.001)
+
+
+    sl = np.linspace(0, 1, pattern.shape[0])
+    sx = np.expand_dims(interpolate.splev(sl, tcx), 1)
+    sy = np.expand_dims(interpolate.splev(sl, tcy), 1)
+
+
+    node = np.concatenate((sx, sy, np.zeros((sx.shape[0], 1))), axis = 1)
+
+    tangent = np.diff(node, axis = 0)
+    segL = np.sum(tangent**2, 1)**0.5
+    segL = np.cumsum(segL)
+    factor = segL[-1]
+    node = node/factor *  factor0
+
+    return node

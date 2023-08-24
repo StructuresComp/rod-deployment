@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import numpy as np
 import math
-from planner.utils import visualizePatternAndTraj, computeSegLen, computeSegLen,\
+from planner.utils import visualizePatternAndTraj, computeSegLen, computeSegLen, preProcessPattern,\
                           computeTangent, computeCurvature, convert2Matrix, computePatternTangent
 import time
 from scipy.spatial.transform import Rotation as R
@@ -72,7 +72,6 @@ def computeOptPathwithSim(ls, Lgb, ks, pose, pattern):
         -- kappaI {:} -- kappaT {:} -- xTop {:} -- yTop {:} -- zTop {:}".format(ls, ks, kap0, kap, xTop, yTop, zTop)
         # print(cmd)
         result = subprocess.run(cmd, capture_output=True, text=True, shell = True)
-
         # read the contents
         res = np.loadtxt("datafiles/simDER.txt")
         # get the last
@@ -125,10 +124,10 @@ if __name__ == "__main__":
     fileName = sys.argv[3]
 
     # define parameters (one example)
-    h = 1.6e-3 # rod radius
+    h = 2.0e-3 # rod radius
     rho = 1180 # volume density
-    Lgb = 1.8e-2 # gravito-bending length
-    ls = 0.875 # initial suspended length
+    Lgb = 3.4e-2 # gravito-bending length
+    ls = 0.89 # initial suspended length
     g = 10
 
     E = Lgb**3 * 8 * rho * g/h**2
@@ -139,6 +138,7 @@ if __name__ == "__main__":
     normks = Lgb**2 * ks/kb
     # load pattern
     pattern = np.loadtxt(f"patterns/{fileName}")
+    pattern = preProcessPattern(pattern)
 
     pose = [0, 0, ls, 1, 0, 0, 0]
     print(isInitial)
